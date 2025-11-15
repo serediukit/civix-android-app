@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Civix</string>
+    <string name="app_title_upper">CIVIX</string>
+
+    <string name="login_title">Log in</string>
+    <string name="login_email">Email</string>
+    <string name="login_passwords">Password</string>
+    <string name="login_button">Log in</string>
 </resources>

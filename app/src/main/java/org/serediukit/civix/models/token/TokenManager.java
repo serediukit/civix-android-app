@@ -29,7 +29,7 @@ public class TokenManager {
 
             tokensPreferences = EncryptedSharedPreferences.create(
                     context,
-                    "tokens_prefs",
+                    PREF_FILE_NAME,
                     masterKey,
                     EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
                     EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM

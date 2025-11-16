@@ -32,14 +32,17 @@ public class LoaderActivity extends AppCompatActivity {
         LoaderModel loaderModel = new LoaderModel();
         loaderViewModel = new LoaderViewModel(tokenManager, loaderModel);
 
+        new Thread(() -> {
+            Intent intent = resolveNextIntent();
+            startActivity(intent);
+            finish();
+        }).start();
+    }
+
+    private Intent resolveNextIntent() {
         if (loaderViewModel.isUserAuthed()) {
-            Intent intent = new Intent(LoaderActivity.this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-        } else {
-            Intent intent = new Intent(LoaderActivity.this, LoginActivity.class);
-            startActivity(intent);
-            finish();
+            return new Intent(LoaderActivity.this, MainActivity.class);
         }
+        return new Intent(LoaderActivity.this, LoginActivity.class);
     }
 }

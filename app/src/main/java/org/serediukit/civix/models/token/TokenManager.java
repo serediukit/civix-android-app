@@ -55,6 +55,9 @@ public class TokenManager {
         String access = tokensPreferences.getString(KEY_ACCESS_TOKEN, null);
         String refresh = tokensPreferences.getString(KEY_REFRESH_TOKEN, null);
 
+        Log.d("TOKEN MANAGER", "access: " + access);
+        Log.d("TOKEN MANAGER", "refresh: " + refresh);
+
         return new JWTTokens(access, refresh);
     }
 

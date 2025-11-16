@@ -1,36 +1,32 @@
 package org.serediukit.civix.models.api.auth.response;
 
-public class RefreshResponse {
-    private final String accessToken;
-    private final int accessExpiresAt;
-    private final String refreshToken;
-    private final int refreshExpiresAt;
+import com.squareup.moshi.Json;
 
-    public RefreshResponse(
-            String accessToken,
-            int accessExpiresAt,
-            String refreshToken,
-            int refreshExpiresAt
-    ) {
-        this.accessToken = accessToken;
-        this.accessExpiresAt = accessExpiresAt;
-        this.refreshToken = refreshToken;
-        this.refreshExpiresAt = refreshExpiresAt;
-    }
+import org.serediukit.civix.models.api.auth.responsedata.RefreshData;
+
+public class RefreshResponse {
+    @Json(name = "data")
+    private RefreshData loginData;
+
+    @Json(name = "success")
+    private boolean success;
 
     public String getAccessToken() {
-        return accessToken;
-    }
-
-    public int getAccessExpiresAt() {
-        return accessExpiresAt;
+        // Check for nulls defensively
+        if (loginData != null && loginData.getAccessTokenWrapper() != null) {
+            return loginData.getAccessTokenWrapper().getToken();
+        }
+        return null;
     }
 
     public String getRefreshToken() {
-        return refreshToken;
+        if (loginData != null && loginData.getRefreshTokenWrapper() != null) {
+            return loginData.getRefreshTokenWrapper().getToken();
+        }
+        return null;
     }
 
-    public int getRefreshExpiresAt() {
-        return refreshExpiresAt;
+    public boolean isSuccess() {
+        return success;
     }
 }

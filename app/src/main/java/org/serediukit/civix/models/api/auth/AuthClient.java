@@ -1,5 +1,7 @@
 package org.serediukit.civix.models.api.auth;
 
+import android.util.Log;
+
 import com.squareup.moshi.Moshi;
 
 import org.serediukit.civix.models.api.BaseHTTPClient;
@@ -8,6 +10,12 @@ import org.serediukit.civix.models.api.auth.request.RefreshRequest;
 import org.serediukit.civix.models.api.auth.response.LoginResponse;
 import org.serediukit.civix.models.api.auth.response.RefreshResponse;
 
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -15,24 +23,46 @@ import retrofit2.converter.moshi.MoshiConverterFactory;
 
 public class AuthClient implements BaseHTTPClient {
     private static AuthClient instance;
-    private final AuthService authService;
+    private AuthService authService;
 
     private AuthClient() {
-        Moshi moshi = new Moshi.Builder()
-                // Add any custom adapters here if needed
-                .build();
+        try {
+            final TrustManager[] trustAllCerts = new TrustManager[]{
+                    new X509TrustManager() {
+                        @Override
+                        public void checkClientTrusted(X509Certificate[] chain, String authType) {}
 
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                // Add interceptors for logging, headers, etc.
-                .build();
+                        @Override
+                        public void checkServerTrusted(X509Certificate[] chain, String authType) {}
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .client(okHttpClient)
-                .addConverterFactory(MoshiConverterFactory.create(moshi))
-                .build();
+                        @Override
+                        public X509Certificate[] getAcceptedIssuers() {
+                            return new X509Certificate[]{};
+                        }
+                    }
+            };
 
-        authService = retrofit.create(AuthService.class);
+            final SSLContext sslContext = SSLContext.getInstance("SSL");
+            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+
+            OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                    .sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) trustAllCerts[0])
+                    .hostnameVerifier((hostname, session) -> true)
+                    .build();
+
+            Moshi moshi = new Moshi.Builder()
+                    .build();
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .client(okHttpClient)
+                    .addConverterFactory(MoshiConverterFactory.create(moshi))
+                    .build();
+
+            authService = retrofit.create(AuthService.class);
+        } catch (Exception e) {
+            Log.e("AUTH CLIENT", e.toString());
+        }
     }
 
     public static AuthClient getInstance() {

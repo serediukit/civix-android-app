@@ -28,9 +28,13 @@ public class LoaderActivity extends AppCompatActivity {
             return insets;
         });
 
+        init();
+    }
+
+    private void init() {
         TokenManager tokenManager = TokenManager.getInstance(this.getApplicationContext());
         LoaderModel loaderModel = new LoaderModel();
-        loaderViewModel = new LoaderViewModel(tokenManager, loaderModel);
+        loaderViewModel = new LoaderViewModel(loaderModel, tokenManager);
 
         new Thread(() -> {
             Intent intent = resolveNextIntent();

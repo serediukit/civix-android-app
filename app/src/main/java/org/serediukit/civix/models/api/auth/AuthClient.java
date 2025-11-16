@@ -1,5 +1,6 @@
 package org.serediukit.civix.models.api.auth;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.squareup.moshi.Moshi;
@@ -9,6 +10,8 @@ import org.serediukit.civix.models.api.auth.request.LoginRequest;
 import org.serediukit.civix.models.api.auth.request.RefreshRequest;
 import org.serediukit.civix.models.api.auth.response.LoginResponse;
 import org.serediukit.civix.models.api.auth.response.RefreshResponse;
+import org.serediukit.civix.models.api.interceptors.AuthInterceptor;
+import org.serediukit.civix.models.token.TokenManager;
 
 import java.security.cert.X509Certificate;
 
@@ -25,8 +28,20 @@ public class AuthClient implements BaseHTTPClient {
     private static AuthClient instance;
     private AuthService authService;
 
-    private AuthClient() {
+    private AuthClient(Context context) {
         try {
+            TokenManager tokenManager = TokenManager.getInstance(context);
+
+            Moshi moshi = new Moshi.Builder().build();
+
+            Retrofit baseRetrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(MoshiConverterFactory.create(moshi))
+                    .build();
+
+            AuthInterceptor authInterceptor = new AuthInterceptor(tokenManager);
+            RefreshAuthenticator refreshAuthenticator = new RefreshAuthenticator(tokenManager, baseRetrofit);
+
             final TrustManager[] trustAllCerts = new TrustManager[]{
                     new X509TrustManager() {
                         @Override
@@ -48,15 +63,13 @@ public class AuthClient implements BaseHTTPClient {
             OkHttpClient okHttpClient = new OkHttpClient.Builder()
                     .sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) trustAllCerts[0])
                     .hostnameVerifier((hostname, session) -> true)
+                    .addInterceptor(authInterceptor)
+                    .authenticator(refreshAuthenticator)
                     .build();
 
-            Moshi moshi = new Moshi.Builder()
-                    .build();
 
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
+            Retrofit retrofit = baseRetrofit.newBuilder()
                     .client(okHttpClient)
-                    .addConverterFactory(MoshiConverterFactory.create(moshi))
                     .build();
 
             authService = retrofit.create(AuthService.class);
@@ -65,12 +78,14 @@ public class AuthClient implements BaseHTTPClient {
         }
     }
 
-    public static AuthClient getInstance() {
+    public static AuthClient getInstance(Context context) {
         if (instance == null) {
-            instance = new AuthClient();
+            instance = new AuthClient(context);
         }
         return instance;
     }
+
+
 
     /**
      * @param email The user's email.

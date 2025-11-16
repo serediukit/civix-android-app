@@ -1,5 +1,6 @@
 package org.serediukit.civix.models;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.serediukit.civix.models.api.auth.AuthClient;
@@ -10,8 +11,8 @@ import retrofit2.Response;
 public class LoaderModel {
     private final AuthClient authClient;
 
-    public LoaderModel() {
-        authClient = AuthClient.getInstance();
+    public LoaderModel(Context context) {
+        authClient = AuthClient.getInstance(context);
     }
 
     public RefreshResponse refreshTokens(String refreshToken) {

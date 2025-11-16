@@ -26,6 +26,7 @@ public class LoaderViewModel {
 
         RefreshResponse resp  = loaderModel.refreshTokens(tokens.getRefreshToken());
         if (resp == null) {
+            tokenManager.clearTokens();
             return false;
         }
 

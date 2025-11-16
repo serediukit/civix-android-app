@@ -77,4 +77,12 @@ public class TokenManager {
         tokensPreferences.edit().remove(KEY_ACCESS_TOKEN).apply();
         tokensPreferences.edit().remove(KEY_REFRESH_TOKEN).apply();
     }
+
+    public String getAccessToken() {
+        return tokensPreferences.getString(KEY_ACCESS_TOKEN, null);
+    }
+
+    public String getRefreshToken() {
+        return tokensPreferences.getString(KEY_REFRESH_TOKEN, null);
+    }
 }

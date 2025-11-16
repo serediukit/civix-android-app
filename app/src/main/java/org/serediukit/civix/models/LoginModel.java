@@ -1,5 +1,6 @@
 package org.serediukit.civix.models;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.serediukit.civix.models.api.auth.AuthClient;
@@ -10,8 +11,8 @@ import retrofit2.Response;
 public class LoginModel {
     private final AuthClient authClient;
 
-    public LoginModel() {
-        authClient = AuthClient.getInstance();
+    public LoginModel(Context context) {
+        authClient = AuthClient.getInstance(context);
     }
 
     public LoginResponse login(String email, String password) {

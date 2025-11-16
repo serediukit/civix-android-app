@@ -40,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void init() {
         TokenManager tokenManager = TokenManager.getInstance(this.getApplicationContext());
-        LoginModel loginModel = new LoginModel();
+        LoginModel loginModel = new LoginModel(this.getApplicationContext());
         loginViewModel = new LoginViewModel(loginModel, tokenManager);
 
         emailInput = findViewById(R.id.login_email_edit_text);

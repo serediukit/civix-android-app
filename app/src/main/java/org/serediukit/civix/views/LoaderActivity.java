@@ -33,7 +33,7 @@ public class LoaderActivity extends AppCompatActivity {
 
     private void init() {
         TokenManager tokenManager = TokenManager.getInstance(this.getApplicationContext());
-        LoaderModel loaderModel = new LoaderModel();
+        LoaderModel loaderModel = new LoaderModel(this.getApplicationContext());
         loaderViewModel = new LoaderViewModel(loaderModel, tokenManager);
 
         new Thread(() -> {

@@ -3,7 +3,6 @@ package org.serediukit.civix.views;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -13,22 +12,29 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import org.serediukit.civix.R;
 import org.serediukit.civix.models.MainModel;
 import org.serediukit.civix.models.entities.city.Location;
 import org.serediukit.civix.models.entities.report.Report;
 import org.serediukit.civix.util.location.LocationHelper;
-import org.serediukit.civix.util.uicodes.UICode;
 import org.serediukit.civix.viewmodels.MainViewModel;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     private MainViewModel mainViewModel;
     private LocationHelper locationHelper;
-    private TextView mainTV;
+    private GoogleMap googleMap;
+    private List<Report> reports;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +54,13 @@ public class MainActivity extends AppCompatActivity {
         MainModel mainModel = new MainModel(this.getApplicationContext());
         mainViewModel = new MainViewModel(mainModel);
 
-        mainTV = findViewById(R.id.main_activity_text_view);
-
         locationHelper = new LocationHelper(this, this);
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
 
         loadReports();
     }
@@ -97,17 +107,51 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void displayReports(List<Report> reports) {
-        if (reports != null) {
-            StringBuilder displayText = new StringBuilder();
-
-            for (Report report : reports) {
-                displayText.append(report.toString());
-                displayText.append("\n");
-            }
-
-            mainTV.setText(displayText.toString());
-        } else {
+        this.reports = reports;
+        if (reports != null && googleMap != null) {
+            displayReportsOnMap();
+        } else if (reports == null) {
             Toast.makeText(MainActivity.this, R.string.get_reports_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap map) {
+        googleMap = map;
+
+        if (reports != null) {
+            displayReportsOnMap();
+        }
+    }
+
+    private void displayReportsOnMap() {
+        if (googleMap == null || reports == null || reports.isEmpty()) {
+            return;
+        }
+
+        googleMap.clear();
+        LatLng firstLocation = null;
+
+        for (Report report : reports) {
+            Location location = report.getLocation();
+            if (location != null) {
+                LatLng latLng = new LatLng(location.getLat(), location.getLon());
+
+                MarkerOptions markerOptions = new MarkerOptions()
+                        .position(latLng)
+                        .title("Report #" + report.getReportId())
+                        .snippet(report.getDescription());
+
+                googleMap.addMarker(markerOptions);
+
+                if (firstLocation == null) {
+                    firstLocation = latLng;
+                }
+            }
+        }
+
+        if (firstLocation != null) {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(firstLocation, 12f));
         }
     }
 

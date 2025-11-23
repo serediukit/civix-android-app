@@ -16,6 +16,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Civix"
         android:networkSecurityConfig="@xml/network_security_config">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyA4fbOHxJG70uKpPpBRes2mlQCJaLsOI-I" />
+
         <activity
             android:name=".views.MainActivity"
             android:exported="false" />

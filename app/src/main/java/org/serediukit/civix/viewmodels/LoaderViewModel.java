@@ -18,9 +18,7 @@ public class LoaderViewModel {
 
     public boolean isUserAuthed() {
         JWTTokens tokens = tokenManager.getTokens();
-        Log.d("LoaderViewModel", tokens.getAccessToken());
-        Log.d("LoaderViewModel", tokens.getRefreshToken());
-        if (tokens.getRefreshToken() == null) {
+        if (tokens == null) {
             return false;
         }
 

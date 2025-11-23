@@ -58,6 +58,10 @@ public class TokenManager {
         Log.d("TOKEN MANAGER", "access: " + access);
         Log.d("TOKEN MANAGER", "refresh: " + refresh);
 
+        if (access == null) {
+            return null;
+        }
+
         return new JWTTokens(access, refresh);
     }
 

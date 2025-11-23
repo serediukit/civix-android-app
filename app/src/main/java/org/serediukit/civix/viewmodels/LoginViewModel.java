@@ -27,8 +27,8 @@ public class LoginViewModel {
 
         tokenManager.saveTokens(newTokens);
         JWTTokens tokens = tokenManager.getTokens();
-        Log.d("LOGIN VIEWMODEL",tokens.getAccessToken());
-        Log.d("LOGIN VIEWMODEL",tokens.getRefreshToken());
+        Log.d("LOGIN VIEWMODEL | LOGIN",tokens.getAccessToken());
+        Log.d("LOGIN VIEWMODEL | LOGIN",tokens.getRefreshToken());
 
         return UICode.Ok;
     }

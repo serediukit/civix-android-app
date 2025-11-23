@@ -1,5 +1,7 @@
 package org.serediukit.civix.models.entities.report;
 
+import androidx.annotation.NonNull;
+
 import com.squareup.moshi.Json;
 
 import org.serediukit.civix.models.entities.city.Location;
@@ -123,17 +125,15 @@ public class Report {
         this.currentStatusId = status.getValue();
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Report{" +
                 "userId=" + userId +
-                ", location.lat=" + location.getLat() +
-                ", location.lon=" + location.getLon() +
-                ", cityId='" + cityId + '\'' +
-                ", description='" + description + '\'' +
+                ", location.(" + location.getLat() + ";" + location.getLon() +
+                "), description='" + description + '\'' +
                 ", categoryId=" + categoryId +
                 ", currentStatusId=" + currentStatusId +
-                ", updateTime='" + updateTime + '\'' +
                 '}';
     }
 }

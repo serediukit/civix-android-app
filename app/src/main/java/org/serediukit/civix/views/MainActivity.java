@@ -1,11 +1,13 @@
 package org.serediukit.civix.views;
 
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -55,47 +57,68 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadReports() {
         new Thread(() -> {
-            CountDownLatch latch = new CountDownLatch(1);
+            Location location = getUserLocation();
+            List<Report> reports = fetchReportsForLocation(location);
+            runOnUiThread(() -> displayReports(reports));
+        }).start();
+    }
 
-            final double[] loc = new double[2];
+    private Location getUserLocation() {
+        CountDownLatch latch = new CountDownLatch(1);
+        final double[] loc = new double[2];
 
-            locationHelper.getLocation(new LocationHelper.ILocationCallback() {
-                @Override
-                public void onLocationReceived(double lat, double lon) {
-                    loc[0] = lat;
-                    loc[1] = lon;
-                    latch.countDown();
-                }
-
-                @Override
-                public void onError(String msg) {
-                    latch.countDown();
-                }
-            });
-
-            try {
-                latch.await();
-            } catch (InterruptedException e) {
-                Log.e("CIVIX | LOCATION", Objects.requireNonNull(e.getMessage()));
+        locationHelper.getLocation(new LocationHelper.ILocationCallback() {
+            @Override
+            public void onLocationReceived(double lat, double lon) {
+                loc[0] = lat;
+                loc[1] = lon;
+                Log.d("CIVIX | LOCATION", "lat:"+lat+" lon:"+lon);
+                latch.countDown();
             }
 
-            Location location = new Location(loc[0], loc[1]);
-            List<Report> reports = mainViewModel.getAllReports(location);
+            @Override
+            public void onError(String msg) {
+                Log.e("CIVIX | LOCATION", msg);
+                latch.countDown();
+            }
+        });
 
-            runOnUiThread(() -> {
-                if (reports != null) {
-                    StringBuilder displayText = new StringBuilder();
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            Log.e("CIVIX | LOCATION", Objects.requireNonNull(e.getMessage()));
+        }
 
-                    for (Report report : reports) {
-                        displayText.append(report.toString());
-                        displayText.append("\n");
-                    }
+        return new Location(loc[0], loc[1]);
+    }
 
-                    mainTV.setText(displayText.toString());
-                } else {
-                    Toast.makeText(MainActivity.this, R.string.get_reports_error, Toast.LENGTH_SHORT).show();
-                }
-            });
-        }).start();
+    private List<Report> fetchReportsForLocation(Location location) {
+        return mainViewModel.getAllReports(location);
+    }
+
+    private void displayReports(List<Report> reports) {
+        if (reports != null) {
+            StringBuilder displayText = new StringBuilder();
+
+            for (Report report : reports) {
+                displayText.append(report.toString());
+                displayText.append("\n");
+            }
+
+            mainTV.setText(displayText.toString());
+        } else {
+            Toast.makeText(MainActivity.this, R.string.get_reports_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 1001) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                loadReports();
+            }
+        }
     }
 }

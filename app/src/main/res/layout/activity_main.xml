@@ -8,6 +8,7 @@
     tools:context=".views.MainActivity">
 
     <TextView
+        android:id="@+id/main_activity_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="HERE IS MAP"

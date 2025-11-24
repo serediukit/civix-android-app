@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.Log;
 
 import org.serediukit.civix.models.api.reports.ReportsClient;
+import org.serediukit.civix.models.api.reports.request.CreateReportRequest;
+import org.serediukit.civix.models.api.reports.response.CreateReportResponse;
 import org.serediukit.civix.models.api.reports.response.GetReportsResponse;
 import org.serediukit.civix.models.entities.city.Location;
 
@@ -30,6 +32,26 @@ public class MainModel {
             }
         } catch (Exception e) {
             Log.e("MAIN MODEL | GET REPORTS", e.toString());
+        }
+
+        return null;
+    }
+
+    public CreateReportResponse createReport(CreateReportRequest request) {
+        try {
+            Response<CreateReportResponse> response = reportsClient.createReport(
+                    request.getLocation(),
+                    request.getDescription(),
+                    request.getCategoryId()
+            ).execute();
+            if (response.isSuccessful() && response.body() != null) {
+                Log.d("MAIN MODEL | CREATE REPORT", "Report created successfully");
+                return response.body();
+            } else {
+                throw new Exception("create report service error");
+            }
+        } catch (Exception e) {
+            Log.e("MAIN MODEL | CREATE REPORT", e.toString());
         }
 
         return null;

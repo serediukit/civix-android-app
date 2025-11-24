@@ -6,4 +6,27 @@
     <string name="login_email">Email</string>
     <string name="login_passwords">Password</string>
     <string name="login_button">Log in</string>
+
+    <string name="sign_plus">+</string>
+
+    <string name="create_report_title">Create Report</string>
+    <string name="report_description">Description</string>
+    <string name="report_description_hint">Describe the issue</string>
+    <string name="report_category">Category</string>
+    <string name="report_submit">Submit</string>
+    <string name="report_cancel">Cancel</string>
+
+    <string name="category_road">Road</string>
+    <string name="category_sideway">Sideway</string>
+    <string name="category_electric">Electric</string>
+    <string name="category_water">Water</string>
+    <string name="category_gas">Gas</string>
+    <string name="category_heat">Heat</string>
+
+    <string name="error_description_empty">Please enter a description</string>
+    <string name="error_location_unavailable">Location not available</string>
+    <string name="error_location_failed">Unable to get current location</string>
+    <string name="report_submitting">Submitting report…</string>
+    <string name="report_success">Report created successfully!</string>
+    <string name="report_failed">Failed to create report</string>
 </resources>

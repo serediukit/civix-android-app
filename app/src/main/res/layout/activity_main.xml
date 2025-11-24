@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".views.MainActivity">
 
-    <fragment
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
@@ -16,4 +16,52 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/profile_button"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_width="64sp"
+        android:layout_height="64sp"
+        android:layout_marginTop="16sp"
+        android:layout_marginStart="16sp"
+        android:background="@drawable/rounded_button_background"
+        android:onClick="openProfile"
+        app:icon="@drawable/ic_user"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:iconSize="32sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <Button
+        android:id="@+id/my_location_button"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_width="64sp"
+        android:layout_height="64sp"
+        android:layout_marginTop="16sp"
+        android:layout_marginEnd="16sp"
+        android:background="@drawable/rounded_button_background"
+        android:onClick="centerOnMyLocation"
+        app:icon="@drawable/ic_my_location"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:iconSize="32sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <Button
+        android:id="@+id/create_report_button"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_width="64sp"
+        android:layout_height="64sp"
+        android:layout_marginBottom="16sp"
+        android:layout_marginEnd="16sp"
+        android:background="@drawable/rounded_button_background"
+        android:onClick="createReport"
+        app:icon="@drawable/ic_plus"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:iconSize="32sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,6 +14,13 @@
     <string name="report_description">Description</string>
     <string name="report_description_hint">Describe the issue</string>
     <string name="report_category">Category</string>
+    <string name="report_photo">Photo (Optional)</string>
+    <string name="select_photo">Select Photo</string>
+    <string name="no_photo_selected">No photo selected</string>
+    <string name="photo_selected">Photo selected</string>
+    <string name="photo_preview">Photo preview</string>
+    <string name="uploading_photo">Uploading photo…</string>
+    <string name="photo_upload_failed">Failed to upload photo</string>
     <string name="report_submit">Submit</string>
     <string name="report_cancel">Cancel</string>
 

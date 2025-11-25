@@ -2,9 +2,11 @@ package org.serediukit.civix.views;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,17 +15,22 @@ import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.bumptech.glide.Glide;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -42,6 +49,7 @@ import org.serediukit.civix.models.entities.report.ReportCategory;
 import org.serediukit.civix.models.entities.report.ReportStatus;
 import org.serediukit.civix.util.location.LocationHelper;
 import org.serediukit.civix.util.marker.MarkerIconGenerator;
+import org.serediukit.civix.util.photo.PhotoUploader;
 import org.serediukit.civix.viewmodels.MainViewModel;
 
 import java.util.HashMap;
@@ -58,6 +66,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private List<Report> reports;
     private Location location;
     private Map<String, Report> markerReportMap = new HashMap<>();
+    private PhotoUploader photoUploader;
+    private Uri selectedPhotoUri;
+    private ActivityResultLauncher<Intent> photoPickerLauncher;
+    private TextView currentPhotoStatusText;
+    private ImageView currentPhotoPreview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +83,28 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return insets;
         });
 
+        // Initialize photo picker launcher
+        photoPickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        selectedPhotoUri = result.getData().getData();
+                        Log.d("CIVIX | PHOTO", "Photo selected: " + selectedPhotoUri);
+
+                        // Update UI if references exist
+                        if (currentPhotoStatusText != null && currentPhotoPreview != null) {
+                            runOnUiThread(() -> {
+                                currentPhotoStatusText.setText(R.string.photo_selected);
+                                currentPhotoPreview.setVisibility(View.VISIBLE);
+                                Glide.with(MainActivity.this)
+                                        .load(selectedPhotoUri)
+                                        .into(currentPhotoPreview);
+                            });
+                        }
+                    }
+                }
+        );
+
         init();
     }
 
@@ -78,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mainViewModel = new MainViewModel(mainModel);
 
         locationHelper = new LocationHelper(this, this);
+        photoUploader = new PhotoUploader();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -250,6 +286,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void showCreateReportDialog() {
+        selectedPhotoUri = null;  // Reset selected photo
+
         Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_create_report);
@@ -261,6 +299,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         EditText descriptionInput = dialog.findViewById(R.id.description_input);
         Button submitButton = dialog.findViewById(R.id.submit_button);
         Button cancelButton = dialog.findViewById(R.id.cancel_button);
+        Button selectPhotoButton = dialog.findViewById(R.id.select_photo_button);
+        TextView photoStatusText = dialog.findViewById(R.id.photo_status_text);
+        ImageView photoPreview = dialog.findViewById(R.id.photo_preview);
+
+        // Store references for photo picker callback
+        currentPhotoStatusText = photoStatusText;
+        currentPhotoPreview = photoPreview;
 
         String[] categories = {
                 getString(R.string.category_road),
@@ -275,7 +320,25 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(adapter);
 
-        cancelButton.setOnClickListener(v -> dialog.dismiss());
+        // Photo selection handler
+        selectPhotoButton.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK);
+            intent.setType("image/*");
+            photoPickerLauncher.launch(intent);
+        });
+
+        cancelButton.setOnClickListener(v -> {
+            selectedPhotoUri = null;
+            currentPhotoStatusText = null;
+            currentPhotoPreview = null;
+            dialog.dismiss();
+        });
+
+        dialog.setOnDismissListener(d -> {
+            // Clear references when dialog is dismissed
+            currentPhotoStatusText = null;
+            currentPhotoPreview = null;
+        });
 
         submitButton.setOnClickListener(v -> {
             String description = descriptionInput.getText().toString().trim();
@@ -292,10 +355,45 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
 
             ReportCategory category = ReportCategory.values()[categoryPosition + 1];
-            CreateReportRequest request = new CreateReportRequest(location, description, category.getValue());
 
             dialog.dismiss();
-            submitReport(request);
+
+            // Upload photo if selected, then create report
+            if (selectedPhotoUri != null) {
+                Log.d("CIVIX | PHOTO", "Photo selected, starting upload. URI: " + selectedPhotoUri);
+                Toast.makeText(this, R.string.uploading_photo, Toast.LENGTH_SHORT).show();
+                photoUploader.uploadPhoto(selectedPhotoUri, new PhotoUploader.UploadCallback() {
+                    @Override
+                    public void onSuccess(String downloadUrl) {
+                        Log.d("CIVIX | PHOTO", "Upload successful! Download URL: " + downloadUrl);
+                        runOnUiThread(() -> {
+                            CreateReportRequest request = new CreateReportRequest(location, description, category.getValue(), downloadUrl);
+                            submitReport(request);
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.e("CIVIX | PHOTO", "Upload failed", e);
+                        runOnUiThread(() -> {
+                            Toast.makeText(MainActivity.this, R.string.photo_upload_failed, Toast.LENGTH_SHORT).show();
+                            Log.e("CIVIX | PHOTO", "Upload failed - creating report without photo");
+                            // Still submit report without photo
+                            CreateReportRequest request = new CreateReportRequest(location, description, category.getValue());
+                            submitReport(request);
+                        });
+                    }
+
+                    @Override
+                    public void onProgress(int progress) {
+                        Log.d("CIVIX | PHOTO", "Upload progress: " + progress + "%");
+                    }
+                });
+            } else {
+                Log.d("CIVIX | PHOTO", "No photo selected, creating report without photo");
+                CreateReportRequest request = new CreateReportRequest(location, description, category.getValue());
+                submitReport(request);
+            }
         });
 
         dialog.show();
@@ -334,6 +432,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         TextView reportCreatedTime = dialog.findViewById(R.id.report_created_time);
         TextView reportUpdatedTime = dialog.findViewById(R.id.report_updated_time);
         TextView reportLocation = dialog.findViewById(R.id.report_location);
+        ImageView reportPhoto = dialog.findViewById(R.id.report_photo);
         Button closeButton = dialog.findViewById(R.id.close_button);
 
         // Set category color and name
@@ -352,6 +451,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Location loc = report.getLocation();
         if (loc != null) {
             reportLocation.setText(String.format(Locale.getDefault(), "%.5f, %.5f", loc.getLat(), loc.getLon()));
+        }
+
+        // Display photo if available
+        String photoUrl = report.getPhotoUrl();
+        if (photoUrl != null && !photoUrl.isEmpty()) {
+            reportPhoto.setVisibility(View.VISIBLE);
+            Glide.with(this)
+                    .load(photoUrl)
+                    .into(reportPhoto);
+        } else {
+            reportPhoto.setVisibility(View.GONE);
         }
 
         closeButton.setOnClickListener(v -> dialog.dismiss());

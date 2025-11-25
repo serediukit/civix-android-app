@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.secrets.gradle.plugin)
+    id("com.google.gms.google-services")
 }
 
 secrets {
@@ -55,6 +56,13 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-moshi:3.0.0")
     implementation("com.squareup.okhttp3:okhttp:5.3.0")
     implementation("com.squareup.moshi:moshi:1.15.2")
+
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
+    implementation("com.google.firebase:firebase-storage")
+
+    // Image loading
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

@@ -1,5 +1,14 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.secrets.gradle.plugin)
+}
+
+secrets {
+    // Change the properties file from the default "local.properties" to "secrets.properties"
+    propertiesFileName = "secrets.properties"
+
+    // A properties file containing default secret values to use if secrets.properties doesn't exist
+    defaultPropertiesFileName = "secrets.defaults.properties"
 }
 
 android {

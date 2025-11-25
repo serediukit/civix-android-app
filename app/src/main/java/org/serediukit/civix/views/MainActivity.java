@@ -150,24 +150,26 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
 
-        googleMap.clear();
+        runOnUiThread(() -> {
+            googleMap.clear();
 
-        LatLng userLocation = new LatLng(location.getLat(), location.getLon());
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15f));
+            LatLng userLocation = new LatLng(location.getLat(), location.getLon());
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15f));
 
-        for (Report report : reports) {
-            Location rLocation = report.getLocation();
-            if (rLocation != null) {
-                LatLng latLng = new LatLng(rLocation.getLat(), rLocation.getLon());
+            for (Report report : reports) {
+                Location rLocation = report.getLocation();
+                if (rLocation != null) {
+                    LatLng latLng = new LatLng(rLocation.getLat(), rLocation.getLon());
 
-                MarkerOptions markerOptions = new MarkerOptions()
-                        .position(latLng)
-                        .title(report.getDescription())
-                        .snippet(report.getUpdateTime()+"\n"+ReportStatus.fromValue(report.getCurrentStatusId()).toString());
+                    MarkerOptions markerOptions = new MarkerOptions()
+                            .position(latLng)
+                            .title(report.getDescription())
+                            .snippet(report.getUpdateTime()+"\n"+ReportStatus.fromValue(report.getCurrentStatusId()).toString());
 
-                googleMap.addMarker(markerOptions);
+                    googleMap.addMarker(markerOptions);
+                }
             }
-        }
+        });
     }
 
     @Override

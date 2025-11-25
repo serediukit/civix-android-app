@@ -6,6 +6,7 @@
     <string name="login_email">Email</string>
     <string name="login_passwords">Password</string>
     <string name="login_button">Log in</string>
+    <string name="login_error">Log in error</string>
 
     <string name="sign_plus">+</string>
 
@@ -29,4 +30,21 @@
     <string name="report_submitting">Submitting report…</string>
     <string name="report_success">Report created successfully!</string>
     <string name="report_failed">Failed to create report</string>
+    <string name="get_reports_error">Failed to load reports</string>
+
+    <string name="report_details_title">Report Details</string>
+    <string name="report_id">Report ID:</string>
+    <string name="report_status">Status:</string>
+    <string name="report_created">Created:</string>
+    <string name="report_updated">Updated:</string>
+    <string name="report_location">Location:</string>
+    <string name="close">Close</string>
+
+    <string name="status_new">New</string>
+    <string name="status_in_progress">In Progress</string>
+    <string name="status_completed">Completed</string>
+    <string name="status_rejected">Rejected</string>
+    <string name="status_canceled">Canceled</string>
+
+    <string name="category_unknown">Unknown</string>
 </resources>

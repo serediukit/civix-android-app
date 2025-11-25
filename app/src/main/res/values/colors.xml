@@ -4,4 +4,13 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="primary">#086a24</color>
+
+    <!-- Report Category Colors -->
+    <color name="category_unknown">#808080</color>
+    <color name="category_road">#FF5722</color>
+    <color name="category_sideway">#FF9800</color>
+    <color name="category_electric">#FFEB3B</color>
+    <color name="category_water">#2196F3</color>
+    <color name="category_gas">#9C27B0</color>
+    <color name="category_heat">#F44336</color>
 </resources>

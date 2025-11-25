@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -29,6 +30,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.serediukit.civix.R;
@@ -39,9 +41,13 @@ import org.serediukit.civix.models.entities.report.Report;
 import org.serediukit.civix.models.entities.report.ReportCategory;
 import org.serediukit.civix.models.entities.report.ReportStatus;
 import org.serediukit.civix.util.location.LocationHelper;
+import org.serediukit.civix.util.marker.MarkerIconGenerator;
 import org.serediukit.civix.viewmodels.MainViewModel;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 
@@ -51,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap googleMap;
     private List<Report> reports;
     private Location location;
+    private Map<String, Report> markerReportMap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,6 +145,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         googleMap.getUiSettings().setZoomControlsEnabled(false);
         googleMap.getUiSettings().setMapToolbarEnabled(false);
 
+        // Set marker click listener
+        googleMap.setOnMarkerClickListener(marker -> {
+            String markerId = marker.getId();
+            Report report = markerReportMap.get(markerId);
+            if (report != null) {
+                showReportDetailsDialog(report);
+                return true;
+            }
+            return false;
+        });
+
         enableMyLocation();
 
         if (reports != null) {
@@ -152,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         runOnUiThread(() -> {
             googleMap.clear();
+            markerReportMap.clear();
 
             LatLng userLocation = new LatLng(location.getLat(), location.getLon());
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15f));
@@ -160,13 +179,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Location rLocation = report.getLocation();
                 if (rLocation != null) {
                     LatLng latLng = new LatLng(rLocation.getLat(), rLocation.getLon());
+                    ReportCategory category = report.getCategory();
 
                     MarkerOptions markerOptions = new MarkerOptions()
                             .position(latLng)
                             .title(report.getDescription())
-                            .snippet(report.getUpdateTime()+"\n"+ReportStatus.fromValue(report.getCurrentStatusId()).toString());
+                            .icon(MarkerIconGenerator.getMarkerIcon(MainActivity.this, category));
 
-                    googleMap.addMarker(markerOptions);
+                    Marker marker = googleMap.addMarker(markerOptions);
+                    if (marker != null) {
+                        markerReportMap.put(marker.getId(), report);
+                    }
                 }
             }
         });
@@ -291,5 +314,47 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             });
         }).start();
+    }
+
+    private void showReportDetailsDialog(Report report) {
+        Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_report_details);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setCancelable(true);
+
+        // Get views
+        View categoryIndicator = dialog.findViewById(R.id.category_indicator);
+        TextView categoryText = dialog.findViewById(R.id.report_category);
+        TextView reportId = dialog.findViewById(R.id.report_id);
+        TextView reportStatus = dialog.findViewById(R.id.report_status);
+        TextView reportDescription = dialog.findViewById(R.id.report_description);
+        TextView reportCreatedTime = dialog.findViewById(R.id.report_created_time);
+        TextView reportUpdatedTime = dialog.findViewById(R.id.report_updated_time);
+        TextView reportLocation = dialog.findViewById(R.id.report_location);
+        Button closeButton = dialog.findViewById(R.id.close_button);
+
+        // Set category color and name
+        ReportCategory category = report.getCategory();
+        int categoryColor = MarkerIconGenerator.getCategoryColor(this, category);
+        categoryIndicator.setBackgroundColor(categoryColor);
+        categoryText.setText(category.getDisplayName(this));
+
+        // Set report details
+        reportId.setText(report.getReportId());
+        reportStatus.setText(report.getCurrentStatus().getDisplayName(this));
+        reportDescription.setText(report.getDescription());
+        reportCreatedTime.setText(report.getCreateTime());
+        reportUpdatedTime.setText(report.getUpdateTime());
+
+        Location loc = report.getLocation();
+        if (loc != null) {
+            reportLocation.setText(String.format(Locale.getDefault(), "%.5f, %.5f", loc.getLat(), loc.getLon()));
+        }
+
+        closeButton.setOnClickListener(v -> dialog.dismiss());
+
+        dialog.show();
     }
 }

@@ -180,11 +180,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (rLocation != null) {
                     LatLng latLng = new LatLng(rLocation.getLat(), rLocation.getLon());
                     ReportCategory category = report.getCategory();
+                    ReportStatus status = report.getCurrentStatus();
 
                     MarkerOptions markerOptions = new MarkerOptions()
                             .position(latLng)
                             .title(report.getDescription())
-                            .icon(MarkerIconGenerator.getMarkerIcon(MainActivity.this, category));
+                            .icon(MarkerIconGenerator.getMarkerIcon(MainActivity.this, category, status));
 
                     Marker marker = googleMap.addMarker(markerOptions);
                     if (marker != null) {

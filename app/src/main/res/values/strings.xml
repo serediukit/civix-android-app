@@ -1,14 +1,14 @@
 <resources>
-    <string name="app_name">Civix</string>
-    <string name="app_title_upper">CIVIX</string>
+    <string name="app_name" translatable="false">Civix</string>
+    <string name="app_title_upper" translatable="false">CIVIX</string>
 
     <string name="login_title">Log in</string>
-    <string name="login_email">Email</string>
+    <string name="login_email" translatable="false">Email</string>
     <string name="login_passwords">Password</string>
     <string name="login_button">Log in</string>
     <string name="login_error">Log in error</string>
 
-    <string name="sign_plus">+</string>
+    <string name="sign_plus" translatable="false">+</string>
 
     <string name="create_report_title">Create Report</string>
     <string name="report_description">Description</string>

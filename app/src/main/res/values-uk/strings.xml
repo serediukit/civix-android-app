@@ -43,4 +43,15 @@
     <string name="status_rejected">Відхилено</string>
     <string name="status_canceled">Скасовано</string>
     <string name="category_unknown">Невідомо</string>
+    <string name="log_out_button">Вихід</string>
+    <string name="profile_title">Профіль</string>
+    <string name="profile_name">Ім\'я:</string>
+    <string name="profile_surname">Прізвище:</string>
+    <string name="profile_phone">Телефон:</string>
+    <string name="back_to_main_button">Назад до мапи</string>
+    <string name="signup_title">Реєстрація</string>
+    <string name="signup_button">Реєстрація</string>
+    <string name="register_name">Ім\'я</string>
+    <string name="register_surname">Прізвище (опціонально)</string>
+    <string name="register_phone">Номер телефону</string>
 </resources>

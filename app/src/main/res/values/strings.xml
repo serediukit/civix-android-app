@@ -56,7 +56,7 @@
     <string name="status_canceled">Canceled</string>
 
     <string name="profile_title">Profile</string>
-    <string name="profile_email">Email:</string>
+    <string name="profile_email" translatable="false">Email:</string>
     <string name="profile_name">Name:</string>
     <string name="profile_surname">Surname:</string>
     <string name="profile_phone">Phone:</string>

@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:gravity="center_horizontal"
         android:padding="24dp">
 
         <TextView
@@ -54,34 +55,16 @@
             android:background="@android:drawable/edit_text"
             android:layout_marginBottom="16dp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/select_photo_button"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
-
-            <Button
-                android:id="@+id/select_photo_button"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/select_photo"
-                android:textColor="@color/primary"
-                android:drawableLeft="@android:drawable/ic_menu_camera"
-                android:drawablePadding="8dp" />
-
-            <TextView
-                android:id="@+id/photo_status_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:text="@string/no_photo_selected"
-                android:textColor="@android:color/darker_gray"
-                android:textAlignment="textEnd"
-                android:textSize="12sp" />
-        </LinearLayout>
+            android:layout_marginBottom="16dp"
+            android:text="@string/select_photo"
+            android:textColor="@color/primary"
+            android:drawableLeft="@android:drawable/ic_menu_camera"
+            android:drawablePadding="8dp" />
 
         <ImageView
             android:id="@+id/photo_preview"
@@ -92,29 +75,22 @@
             android:layout_marginBottom="16dp"
             android:contentDescription="@string/photo_preview" />
 
-        <LinearLayout
+        <Button
+            android:id="@+id/submit_button"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="end">
+            android:text="@string/report_submit"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/rounded_button_background"
+            android:textColor="@color/white" />
 
-            <Button
-                android:id="@+id/cancel_button"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/report_cancel"
-                android:textColor="@color/primary"
-                android:layout_marginEnd="8dp" />
-
-            <Button
-                android:id="@+id/submit_button"
-                style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/report_submit"
-                android:background="@drawable/rounded_button_background"
-                android:textColor="@color/white" />
-        </LinearLayout>
+        <Button
+            android:id="@+id/cancel_button"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/report_cancel"
+            android:textColor="@color/primary" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

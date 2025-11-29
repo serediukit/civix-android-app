@@ -65,11 +65,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap googleMap;
     private List<Report> reports;
     private Location location;
-    private Map<String, Report> markerReportMap = new HashMap<>();
+    private final Map<String, Report> markerReportMap = new HashMap<>();
     private PhotoUploader photoUploader;
     private Uri selectedPhotoUri;
     private ActivityResultLauncher<Intent> photoPickerLauncher;
-    private TextView currentPhotoStatusText;
     private ImageView currentPhotoPreview;
 
     @Override
@@ -92,9 +91,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         Log.d("CIVIX | PHOTO", "Photo selected: " + selectedPhotoUri);
 
                         // Update UI if references exist
-                        if (currentPhotoStatusText != null && currentPhotoPreview != null) {
+                        if (currentPhotoPreview != null) {
                             runOnUiThread(() -> {
-                                currentPhotoStatusText.setText(R.string.photo_selected);
                                 currentPhotoPreview.setVisibility(View.VISIBLE);
                                 Glide.with(MainActivity.this)
                                         .load(selectedPhotoUri)
@@ -303,11 +301,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Button submitButton = dialog.findViewById(R.id.submit_button);
         Button cancelButton = dialog.findViewById(R.id.cancel_button);
         Button selectPhotoButton = dialog.findViewById(R.id.select_photo_button);
-        TextView photoStatusText = dialog.findViewById(R.id.photo_status_text);
         ImageView photoPreview = dialog.findViewById(R.id.photo_preview);
 
         // Store references for photo picker callback
-        currentPhotoStatusText = photoStatusText;
         currentPhotoPreview = photoPreview;
 
         String[] categories = {
@@ -332,14 +328,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         cancelButton.setOnClickListener(v -> {
             selectedPhotoUri = null;
-            currentPhotoStatusText = null;
             currentPhotoPreview = null;
             dialog.dismiss();
         });
 
         dialog.setOnDismissListener(d -> {
-            // Clear references when dialog is dismissed
-            currentPhotoStatusText = null;
             currentPhotoPreview = null;
         });
 

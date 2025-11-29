@@ -426,12 +426,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Get views
         View categoryIndicator = dialog.findViewById(R.id.category_indicator);
         TextView categoryText = dialog.findViewById(R.id.report_category);
-        TextView reportId = dialog.findViewById(R.id.report_id);
         TextView reportStatus = dialog.findViewById(R.id.report_status);
         TextView reportDescription = dialog.findViewById(R.id.report_description);
-        TextView reportCreatedTime = dialog.findViewById(R.id.report_created_time);
         TextView reportUpdatedTime = dialog.findViewById(R.id.report_updated_time);
-        TextView reportLocation = dialog.findViewById(R.id.report_location);
         ImageView reportPhoto = dialog.findViewById(R.id.report_photo);
         Button closeButton = dialog.findViewById(R.id.close_button);
 
@@ -442,16 +439,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         categoryText.setText(category.getDisplayName(this));
 
         // Set report details
-        reportId.setText(report.getReportId());
         reportStatus.setText(report.getCurrentStatus().getDisplayName(this));
         reportDescription.setText(report.getDescription());
-        reportCreatedTime.setText(report.getCreateTime());
         reportUpdatedTime.setText(report.getUpdateTime());
-
-        Location loc = report.getLocation();
-        if (loc != null) {
-            reportLocation.setText(String.format(Locale.getDefault(), "%.5f, %.5f", loc.getLat(), loc.getLon()));
-        }
 
         // Display photo if available
         String photoUrl = report.getPhotoUrl();

@@ -4,4 +4,20 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="primary">#086a24</color>
+
+    <!-- Report Category Colors -->
+    <color name="category_unknown">#808080</color>
+    <color name="category_road">#277827</color>
+    <color name="category_sideway">#FF9800</color>
+    <color name="category_electric">#FFEB3B</color>
+    <color name="category_water">#2196F3</color>
+    <color name="category_gas">#9C27B0</color>
+    <color name="category_heat">#F44336</color>
+
+    <!-- Report Status Colors -->
+    <color name="status_new">#ffffff</color>
+    <color name="status_in_progress">#fdffc2</color>
+    <color name="status_completed">#ccffd4</color>
+    <color name="status_rejected">#ffabab</color>
+    <color name="status_canceled">#d1d1d1</color>
 </resources>

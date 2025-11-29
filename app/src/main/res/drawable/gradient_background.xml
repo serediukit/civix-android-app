@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Base gradient -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="270"
+                android:startColor="#CCF0F6"
+                android:endColor="#C3DCC9"
+                android:type="linear" />
+        </shape>
+    </item>
+
+    <!-- First circle - top left -->
+    <item
+        android:top="-150dp"
+        android:left="-150dp"
+        android:width="400dp"
+        android:height="400dp">
+        <shape android:shape="oval">
+            <gradient
+                android:startColor="#4450E3C2"
+                android:endColor="#0050E3C2"
+                android:type="radial"
+                android:gradientRadius="200dp" />
+        </shape>
+    </item>
+
+    <!-- Second circle - top right -->
+    <item
+        android:top="80dp"
+        android:right="-120dp"
+        android:width="350dp"
+        android:height="350dp">
+        <shape android:shape="oval">
+            <gradient
+                android:startColor="#44F093FB"
+                android:endColor="#00F093FB"
+                android:type="radial"
+                android:gradientRadius="175dp" />
+        </shape>
+    </item>
+
+    <!-- Third circle - middle left -->
+    <item
+        android:top="300dp"
+        android:left="60dp"
+        android:width="280dp"
+        android:height="280dp">
+        <shape android:shape="oval">
+            <gradient
+                android:startColor="#444FACFE"
+                android:endColor="#004FACFE"
+                android:type="radial"
+                android:gradientRadius="140dp" />
+        </shape>
+    </item>
+
+    <!-- Fourth circle - bottom right -->
+    <item
+        android:bottom="-130dp"
+        android:right="-80dp"
+        android:width="380dp"
+        android:height="380dp">
+        <shape android:shape="oval">
+            <gradient
+                android:startColor="#4400F2C3"
+                android:endColor="#0000F2C3"
+                android:type="radial"
+                android:gradientRadius="190dp" />
+        </shape>
+    </item>
+
+    <!-- Fifth circle - bottom left -->
+    <item
+        android:top="550dp"
+        android:left="-150dp"
+        android:width="400dp"
+        android:height="400dp">
+        <shape android:shape="oval">
+            <gradient
+                android:startColor="#4450E3C2"
+                android:endColor="#0050E3C2"
+                android:type="radial"
+                android:gradientRadius="200dp" />
+        </shape>
+    </item>
+
+    <!-- Sixth circle - bottom right -->
+    <item
+        android:top="530dp"
+        android:right="-380dp"
+        android:width="380dp"
+        android:height="380dp">
+        <shape android:shape="oval">
+            <gradient
+                android:startColor="#4400F2C3"
+                android:endColor="#0000F2C3"
+                android:type="radial"
+                android:gradientRadius="190dp" />
+        </shape>
+    </item>
+
+    <!-- Overlay for blur effect simulation -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="270"
+                android:startColor="#11FFFFFF"
+                android:centerColor="#00FFFFFF"
+                android:endColor="#11FFFFFF"
+                android:type="linear" />
+        </shape>
+    </item>
+</layer-list>

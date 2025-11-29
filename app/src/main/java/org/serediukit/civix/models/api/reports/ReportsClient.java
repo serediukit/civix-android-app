@@ -119,4 +119,13 @@ public class ReportsClient implements BaseHTTPClient {
         CreateReportRequest request = new CreateReportRequest(location, description, categoryId);
         return reportsService.createReport(request);
     }
+
+    /**
+     * Create a new report with a CreateReportRequest object.
+     * @param request The CreateReportRequest containing all report details including photo URL.
+     * @return A Retrofit Call object for the create report request.
+     */
+    public Call<CreateReportResponse> createReport(CreateReportRequest request) {
+        return reportsService.createReport(request);
+    }
 }

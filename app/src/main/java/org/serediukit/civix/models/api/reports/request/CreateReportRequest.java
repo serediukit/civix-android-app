@@ -14,10 +14,20 @@ public class CreateReportRequest {
     @Json(name = "category_id")
     private int categoryId;
 
+    @Json(name = "photo_url")
+    private String photoUrl;
+
     public CreateReportRequest(Location location, String description, int categoryId) {
         this.location = location;
         this.description = description;
         this.categoryId = categoryId;
+    }
+
+    public CreateReportRequest(Location location, String description, int categoryId, String photoUrl) {
+        this.location = location;
+        this.description = description;
+        this.categoryId = categoryId;
+        this.photoUrl = photoUrl;
     }
 
     public Location getLocation() {
@@ -42,5 +52,13 @@ public class CreateReportRequest {
 
     public void setCategoryId(int categoryId) {
         this.categoryId = categoryId;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 }

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+
+    <!-- White marker body -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M24,4C16.268,4 10,10.268 10,18c0,9.75 14,26 14,26s14,-16.25 14,-26C38,10.268 31.732,4 24,4z"/>
+
+<!--    &lt;!&ndash; Colored circle centered in marker body (will be tinted programmatically) &ndash;&gt;-->
+<!--    <path-->
+<!--        android:fillColor="@android:color/holo_red_dark"-->
+<!--        android:pathData="M24,18m-7,0a7,7 0,1 1,14 0a7,7 0,1 1,-14 0"/>-->
+
+    <!-- Border for better visibility -->
+    <path
+        android:strokeColor="#333333"
+        android:strokeWidth="1.5"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M24,4C16.268,4 10,10.268 10,18c0,9.75 14,26 14,26s14,-16.25 14,-26C38,10.268 31.732,4 24,4z"/>
+</vector>

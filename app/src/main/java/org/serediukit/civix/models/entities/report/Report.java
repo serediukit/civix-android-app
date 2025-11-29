@@ -34,6 +34,9 @@ public class Report {
     @Json(name = "current_status_id")
     private int currentStatusId;
 
+    @Json(name = "photo_url")
+    private String photoUrl;
+
     public Report() {
     }
 
@@ -123,6 +126,14 @@ public class Report {
 
     public void setCurrentStatus(ReportStatus status) {
         this.currentStatusId = status.getValue();
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 
     @NonNull

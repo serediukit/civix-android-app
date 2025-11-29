@@ -7,11 +7,12 @@
     <string name="login_passwords">Password</string>
     <string name="login_button">Log in</string>
     <string name="login_error">Log in error</string>
+    <string name="log_out_button">Log out</string>
 
     <string name="sign_plus" translatable="false">+</string>
 
     <string name="create_report_title">Create Report</string>
-    <string name="report_description">Description</string>
+    <string name="report_description">Description:</string>
     <string name="report_description_hint">Describe the issue</string>
     <string name="report_category">Category</string>
     <string name="report_photo">Photo (Optional)</string>
@@ -30,6 +31,7 @@
     <string name="category_water">Water</string>
     <string name="category_gas">Gas</string>
     <string name="category_heat">Heat</string>
+    <string name="category_unknown">Unknown</string>
 
     <string name="error_description_empty">Please enter a description</string>
     <string name="error_location_unavailable">Location not available</string>
@@ -39,7 +41,7 @@
     <string name="report_failed">Failed to create report</string>
     <string name="get_reports_error">Failed to load reports</string>
 
-    <string name="report_details_title">Report Details</string>
+    <string name="report_details_title">Report Details:</string>
     <string name="report_id">Report ID:</string>
     <string name="report_status">Status:</string>
     <string name="report_created">Created:</string>
@@ -53,5 +55,17 @@
     <string name="status_rejected">Rejected</string>
     <string name="status_canceled">Canceled</string>
 
-    <string name="category_unknown">Unknown</string>
+    <string name="profile_title">Profile</string>
+    <string name="profile_email">Email:</string>
+    <string name="profile_name">Name:</string>
+    <string name="profile_surname">Surname:</string>
+    <string name="profile_phone">Phone:</string>
+
+    <string name="back_to_main_button">Back to map</string>
+
+    <string name="signup_title">Sign Up</string>
+    <string name="signup_button">Sign Up</string>
+    <string name="register_name">Name</string>
+    <string name="register_surname">Surname (Optional)</string>
+    <string name="register_phone">Phone Number</string>
 </resources>

@@ -74,19 +74,20 @@
                 android:layout_height="wrap_content"
                 android:text="@string/select_photo"
                 android:textColor="@color/primary"
-                android:drawableStart="@android:drawable/ic_menu_camera"
+                android:drawableLeft="@android:drawable/ic_menu_camera"
                 android:drawablePadding="8dp" />
 
             <TextView
                 android:id="@+id/photo_status_text"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_gravity="center_vertical"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
                 android:text="@string/no_photo_selected"
-                android:textSize="12sp"
                 android:textColor="@android:color/darker_gray"
-                android:layout_marginStart="8dp" />
+                android:textAlignment="textEnd"
+                android:textSize="12sp" />
         </LinearLayout>
 
         <ImageView

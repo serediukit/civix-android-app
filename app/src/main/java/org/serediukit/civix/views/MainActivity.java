@@ -278,6 +278,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void openProfile(View view) {
+        Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     public void createReport(View view) {

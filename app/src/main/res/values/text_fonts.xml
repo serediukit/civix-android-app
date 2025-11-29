@@ -2,4 +2,5 @@
     <dimen name="title_upper">48sp</dimen>
     <dimen name="title">32sp</dimen>
     <dimen name="default_text">16sp</dimen>
+    <dimen name="small_text">12sp</dimen>
 </resources>

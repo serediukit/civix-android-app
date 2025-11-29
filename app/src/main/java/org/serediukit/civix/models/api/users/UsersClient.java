@@ -1,4 +1,4 @@
-package org.serediukit.civix.models.api.auth;
+package org.serediukit.civix.models.api.users;
 
 import android.content.Context;
 import android.util.Log;
@@ -6,12 +6,9 @@ import android.util.Log;
 import com.squareup.moshi.Moshi;
 
 import org.serediukit.civix.models.api.BaseHTTPClient;
-import org.serediukit.civix.models.api.auth.request.LoginRequest;
-import org.serediukit.civix.models.api.auth.request.RefreshRequest;
-import org.serediukit.civix.models.api.auth.response.LoginResponse;
-import org.serediukit.civix.models.api.auth.response.RefreshResponse;
-import org.serediukit.civix.models.api.auth.response.RegisterResponse;
+import org.serediukit.civix.models.api.auth.RefreshAuthenticator;
 import org.serediukit.civix.models.api.interceptors.AuthInterceptor;
+import org.serediukit.civix.models.api.users.response.GetUserResponse;
 import org.serediukit.civix.models.token.TokenManager;
 
 import java.security.cert.X509Certificate;
@@ -25,11 +22,11 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.moshi.MoshiConverterFactory;
 
-public class AuthClient implements BaseHTTPClient {
-    private static AuthClient instance;
-    private AuthService authService;
+public class UsersClient implements BaseHTTPClient {
+    private static UsersClient instance;
+    private UsersService usersService;
 
-    private AuthClient(Context context) {
+    private UsersClient(Context context) {
         try {
             TokenManager tokenManager = TokenManager.getInstance(context);
 
@@ -68,56 +65,28 @@ public class AuthClient implements BaseHTTPClient {
                     .authenticator(refreshAuthenticator)
                     .build();
 
-
             Retrofit retrofit = baseRetrofit.newBuilder()
                     .client(okHttpClient)
                     .build();
 
-            authService = retrofit.create(AuthService.class);
+            usersService = retrofit.create(UsersService.class);
         } catch (Exception e) {
-            Log.e("AUTH CLIENT", e.toString());
+            Log.e("USERS CLIENT", e.toString());
         }
     }
 
-    public static AuthClient getInstance(Context context) {
+    public static UsersClient getInstance(Context context) {
         if (instance == null) {
-            instance = new AuthClient(context);
+            instance = new UsersClient(context);
         }
         return instance;
     }
 
-
-
     /**
-     * @param email The user's email.
-     * @param password The user's password.
-     * @return A Retrofit Call object for the login request.
+     * Get the current user's profile information.
+     * @return A Retrofit Call object for the get current user request.
      */
-    public Call<LoginResponse> login(String email, String password) {
-        LoginRequest request = new LoginRequest(email, password);
-        return authService.login(request);
-    }
-
-    /**
-     * @param token The user's refresh_token.
-     * @return A Retrofit Call object for the refresh request.
-     */
-    public Call<RefreshResponse> refresh(String token) {
-        RefreshRequest request = new RefreshRequest(token);
-        return authService.refresh(request);
-    }
-
-    /**
-     * @param email The user's email.
-     * @param password The user's password.
-     * @param name The user's name.
-     * @param surname The user's surname.
-     * @param phoneNumber The user's phone number.
-     * @param location The user's location.
-     * @return A Retrofit Call object for the register request.
-     */
-    public Call<RegisterResponse> register(String email, String password, String name, String surname, String phoneNumber, org.serediukit.civix.models.entities.city.Location location) {
-        org.serediukit.civix.models.api.auth.request.RegisterRequest request = new org.serediukit.civix.models.api.auth.request.RegisterRequest(email, password, name, surname, phoneNumber, location);
-        return authService.register(request);
+    public Call<GetUserResponse> getCurrentUser() {
+        return usersService.getCurrentUser();
     }
 }

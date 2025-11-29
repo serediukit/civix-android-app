@@ -5,7 +5,7 @@
     <string name="login_button">Вхід</string>
     <string name="login_error">Помилка входу</string>
     <string name="create_report_title">Створити звіт</string>
-    <string name="report_description">Опис</string>
+    <string name="report_description">Опис:</string>
     <string name="report_description_hint">Опишіть проблему</string>
     <string name="report_category">Категорія</string>
     <string name="report_photo">Фото (за потреби)</string>

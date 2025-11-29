@@ -54,18 +54,16 @@ public class LoginActivity extends AppCompatActivity {
         boolean isSomeEmpty = false;
         if (email.isEmpty()) {
             isSomeEmpty = true;
-            emailInput.setBackgroundColor(R.color.ic_launcher_background);
+            emailInput.setError("Email is required");
         }
         if (password.isEmpty()) {
             isSomeEmpty = true;
-            passwordInput.setBackgroundColor(R.color.ic_launcher_background);
+            passwordInput.setError("Password is required");
         }
 
         if (isSomeEmpty) {
             return;
         }
-
-        Log.d("TESTTEST", "3");
 
         new Thread(() -> {
             UICode responseCode = loginViewModel.login(email, password);
@@ -82,6 +80,12 @@ public class LoginActivity extends AppCompatActivity {
 
     private void openMainActivity(View view) {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public void openSignUp(View view) {
+        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(intent);
         finish();
     }
